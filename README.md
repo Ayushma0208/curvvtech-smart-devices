@@ -196,7 +196,7 @@ npx autocannon -c 1000 -d 20 \
 
 ### Warm Cache Results (Redis)
 
-![Warm Cache Benchmark](./3a3ef021-01d0-43c5-9da3-1f7424fb7533.png)
+![Warm Cache Benchmark](./warm_cache.jpeg)
 
 * **Latency (avg):** \~644 ms
 * **Requests/sec (avg):** \~247
