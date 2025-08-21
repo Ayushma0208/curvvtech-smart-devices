@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/curvvtech
+      REDIS_URL: redis://redis:6379
+
+      JWT_ACCESS_SECRET: super-access-secret
+      JWT_EXPIRES_IN: 7d
+      JWT_REFRESH_SECRET: super-refresh-secret
+      ACCESS_TTL_MIN: 15
+      REFRESH_TTL_DAYS: 7
+
+      CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+      RATE_LIMIT_WINDOW: 60
+      RATE_LIMIT_AUTH: 20
+      RATE_LIMIT_DEVICES: 200
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - ./src:/app/src          # live reload TypeScript source
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - /app/node_modules       # anonymous volume so node_modules are not overwritten
+    command: npm run dev        # 👈 use ts-node-dev instead of nodemon
+
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    logging:
+      driver: "none"
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo_data:
+  exports_data:
